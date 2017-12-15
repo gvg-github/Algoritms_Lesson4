@@ -13,11 +13,11 @@ public class MainClass {
     public static void main(String[] args) {
 
         //Нахождение длины максимальной последовательности с помощью матрицы.
-        try {
-            Task1();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Task1();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         //чтение массива с препятствием и нахождение количество маршрутов.
         try {
@@ -28,8 +28,9 @@ public class MainClass {
     }
 
     //чтение массива с препятствием и нахождение количество маршрутов.
-     private static void Task2() throws IOException {
+    private static void Task2() throws IOException {
         int[][] arr = new int[][]{{3, 3, 3, 1}, {1, 1, 1, 1}, {0, 1, 1, 1}, {0, 1, 1, 0}};
+//        int[][] arr = new int[][]{{1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int i = 0;
         int j = 0;
@@ -61,51 +62,53 @@ public class MainClass {
 
     }
 
+    //чтение массива с препятствием и нахождение количество маршрутов.
     private static int findExitFromMap(int[][] arr, int i, int j, int iEnd, int jEnd) {
 
         int[][] path = new int[arr.length][arr[0].length];
-        for (int k = 0; k < arr.length; k++) {
-            path[i][k] = 1;
-        }
-        for (int l = 0; l < arr[0].length; l++) {
+
+        for (int l = 0; l < arr.length; l++) {
+            if (arr[l][j] != 1 && arr[l][j] != 9 && arr[l][j] != 5) continue;
             path[l][j] = 1;
         }
 
-        for (int l = 0; l < arr[0].length; l++) {
-            if (l == i) continue;
-            for (int m = 0; m < arr.length; m++) {
-                if (m == j) continue;
-                if (arr[l][m] != 1) continue;
+        for (int k = 0; k < arr[0].length; k++) {
+            if (arr[i][k] != 1) continue;
+            if (arr[i][k] != 1 && arr[i][k] != 9 && arr[i][k] != 5) continue;
+            path[i][k] = 1;
+        }
 
-                if (l + 1 < arr[0].length && m + 1 < arr.length && l - 1 >= 0 && m - 1 >= 0) {
-                    path[l][m] = path[l - 1][m] + path[l + 1][m] + path[l][m - 1] + path[l][m + 1];
-                } else if (l + 1 < arr[0].length && l - 1 >= 0 && m - 1 >= 0) {
-                    path[l][m] = path[l - 1][m] + path[l + 1][m] + path[l][m - 1];
-                } else if (m + 1 < arr.length && l - 1 >= 0 && m - 1 >= 0) {
-                    path[l][m] = path[l - 1][m] + path[l][m - 1] + path[l][m + 1];
-                } else if (l + 1 >= arr[0].length && m + 1 >= arr.length && l - 1 >= 0 && m - 1 >= 0) {
-                    path[l][m] = path[l - 1][m] + path[l][m - 1];
-                } else if (l + 1 < arr[0].length && m + 1 < arr.length && l - 1 < 0 && m - 1 < 0) {
-                    path[l][m] = path[l + 1][m] + path[l][m + 1];
-                } else if (l + 1 >= arr[0].length && m + 1 < arr.length && l - 1 >= 0 && m - 1 < 0) {
-                    path[l][m] = path[l - 1][m] + path[l][m + 1];
-                } else if (l + 1 < arr[0].length && m + 1 >= arr.length && l - 1 < 0 && m - 1 >= 0) {
-                    path[l][m] = path[l + 1][m] + path[l][m - 1];
-                } else if (l + 1 < arr[0].length && m + 1 < arr.length && l - 1 >= 0) {
-                    path[l][m] = path[l - 1][m] + path[l + 1][m] + path[l][m + 1];
-                } else if (m + 1 < arr.length && l + 1 < arr[0].length && m - 1 >= 0) {
-                    path[l][m] = path[l + 1][m] + path[l][m - 1] + path[l][m + 1];
-                } else if (l + 1 < arr[0].length && l - 1 >= 0) {
-                    path[l][m] = path[l + 1][m] + path[l - 1][m];
-                } else if (m + 1 < arr[0].length && m - 1 >= 0) {
-                    path[l][m] = path[l][m + 1] + path[l][m - 1];
-                }
+        for (int l = i + 1; l < arr.length; l++) {
+            for (int k = j + 1; k < arr[0].length; k++){
+                if (arr[l][k] == 0) continue;
+                path[l][k] = path[l][k - 1] + path[l - 1][k];
+            }
+        }
+
+        for (int l = i - 1; l >= 0; l--) {
+            for (int k = j - 1; k >= 0; k--){
+                if (arr[l][k] == 0) continue;
+                path[l][k] = path[l][k + 1] + path[l + 1][k];
+            }
+        }
+
+        for (int l = i - 1; l >= 0; l--) {
+            for (int k = j + 1; k < arr[0].length; k++){
+                if (arr[l][k] == 0) continue;
+                path[l][k] = path[l][k - 1] + path[l + 1][k];
+            }
+        }
+
+        for (int l = i + 1; l < arr.length; l++) {
+            for (int k = j - 1; k >= 0; k--){
+                if (arr[l][k] == 0) continue;
+                path[l][k] = path[l][k + 1] + path[l - 1][k];
             }
         }
 
         return path[iEnd][jEnd];
     }
-    
+
     //Нахождение длины максимальной последовательности с помощью матрицы.
     private static void Task1() throws IOException {
 
